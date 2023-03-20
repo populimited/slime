@@ -221,6 +221,11 @@ defmodule Slime.Parser.Transform do
     %HEExNode{name: "#{leading_dot}#{name}", attributes: attributes, children: children}
   end
 
+  def transform(:function_component_slot, ["::", name, _space, content], _index) do
+    {attributes, children, false} = content
+    %HEExNode{name: ":#{name}", attributes: attributes, children: children}
+  end
+
   def transform(:tag_spaces, input, _index) do
     leading = input[:leading]
     trailing = input[:trailing]
