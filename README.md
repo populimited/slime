@@ -315,7 +315,7 @@ When using slime with Phoenix, the `phoenix_slime` package will call `precompile
 # HEEx Slot Components
 ```slim
 :greet user=@current_user.name
-  :: subtitle
+  ::subtitle
     | Hello there!
 ```
 
@@ -325,6 +325,31 @@ would create the following output:
 <.greet user={@current_user.name}>
   <:subtitle>Hello there!</:subtitle>
 </:greet>
+```
+
+# SHEEx Sigil
+```slim
+import PhoenixSlime
+
+def button(assigns) do
+  ~h"""
+    :greet user=@current_user.name
+      ::subtitle
+        | Hello there!
+  """
+end
+```
+
+would be the equivalent of:
+
+```
+def button(assigns) do
+  ~H"""
+    <.greet user={@current_user.name}>
+      <:subtitle>Hello there!</:subtitle>
+    </:greet>
+  """
+end
 ```
 
 ## Precompilation
