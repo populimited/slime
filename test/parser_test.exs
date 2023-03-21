@@ -107,6 +107,69 @@ defmodule ParserTest do
              ]
     end
 
+    test "components" do
+      slime = """
+      :button class="it-works"
+        | This renders
+        strong inside
+        | the button!
+      """
+
+      assert parse(slime) == [
+        %Slime.Parser.Nodes.HEExNode{
+          name: ".button",
+          attributes: [{"class", "it-works"}],
+          spaces: %{},
+          closed: false,
+          children: [
+            %Slime.Parser.Nodes.VerbatimTextNode{content: ["This renders"]},
+            %Slime.Parser.Nodes.HTMLNode{
+              name: "strong",
+              attributes: [],
+              spaces: %{},
+              closed: false,
+              children: [%Slime.Parser.Nodes.VerbatimTextNode{content: ["inside"]}]
+            },
+            %Slime.Parser.Nodes.VerbatimTextNode{content: ["the button!"]}
+          ]
+        }
+      ]
+    end
+
+    test "component slots" do
+      slime = """
+      :modal
+        | This is the body, everything not in a named slot is rendered in the default slot.
+        ::footer
+          | This is the bottom of the modal.
+      """
+
+      assert parse(slime) == [
+        %Slime.Parser.Nodes.HEExNode{
+          name: ".modal",
+          attributes: [],
+          spaces: %{},
+          closed: false,
+          children: [
+            %Slime.Parser.Nodes.VerbatimTextNode{
+              content: ["This is the body, everything not in a named slot is rendered in the default slot."]
+            },
+            %Slime.Parser.Nodes.HEExNode{
+              name: ":footer",
+              attributes: [],
+              spaces: %{},
+              closed: false,
+              children: [
+                %Slime.Parser.Nodes.VerbatimTextNode{
+                  content: ["This is the bottom of the modal."]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    end
+
     test "attributes" do
       slime = """
       div.class some-attr="value"

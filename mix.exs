@@ -17,13 +17,14 @@ defmodule Slime.Mixfile do
       description: """
       An Elixir library for rendering Slim-like templates.
       """,
-      elixir: "~> 1.9",
+      elixir: "~> 1.14",
       package: package(),
       source_url: "https://github.com/slime-lang/slime",
       start_permanent: Mix.env() == :prod,
       compilers: [:peg, :erlang, :elixir, :app],
       elixirc_paths: elixirc_paths(Mix.env()),
-      version: @version
+      version: @version,
+      extra_applications: [:eex]
     ]
   end
 
@@ -57,7 +58,7 @@ defmodule Slime.Mixfile do
   def deps do
     [
       # packrat parser-generator for PEGs
-      {:neotoma, "~> 1.7"},
+      {:neotoma, "~> 1.7.3", manager: :rebar3},
       # Benchmarking tool
       {:benchfella, ">= 0.0.0", only: [:dev, :test], runtime: false},
       # Documentation

@@ -312,6 +312,45 @@ would create the following output:
 ```
 When using slime with Phoenix, the `phoenix_slime` package will call `precompile_heex/2` and pass the resulting valid HEEx to [`EEx`](https://hexdocs.pm/eex/EEx.html) with [`Phoenix.LiveView.HTMLEngine`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.HTMLEngine.html#handle_text/3) as the `engine:` option.  This will produce the final html.
 
+# HEEx Slot Components
+```slim
+:greet user=@current_user.name
+  ::subtitle
+    | Hello there!
+```
+
+would create the following output:
+
+```
+<.greet user={@current_user.name}>
+  <:subtitle>Hello there!</:subtitle>
+</:greet>
+```
+
+# SHEEx Sigil
+```slim
+import PhoenixSlime
+
+def button(assigns) do
+  ~h"""
+    :greet user=@current_user.name
+      ::subtitle
+        | Hello there!
+  """
+end
+```
+
+would be the equivalent of:
+
+```
+def button(assigns) do
+  ~H"""
+    <.greet user={@current_user.name}>
+      <:subtitle>Hello there!</:subtitle>
+    </:greet>
+  """
+end
+```
 
 ## Precompilation
 
