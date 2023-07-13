@@ -3,12 +3,6 @@ defmodule Slime.Mixfile do
 
   @version "1.2.1"
 
-  @compile_peg_task "tasks/compile.peg.exs"
-  @do_peg_compile File.exists?(@compile_peg_task)
-  if @do_peg_compile do
-    Code.eval_file(@compile_peg_task)
-  end
-
   def project do
     [
       app: :slime,
@@ -21,7 +15,7 @@ defmodule Slime.Mixfile do
       package: package(),
       source_url: "https://github.com/slime-lang/slime",
       start_permanent: Mix.env() == :prod,
-      compilers: [:peg, :erlang, :elixir, :app],
+      compilers: [:erlang, :elixir, :app],
       elixirc_paths: elixirc_paths(Mix.env()),
       version: @version,
       extra_applications: [:eex]
@@ -42,7 +36,6 @@ defmodule Slime.Mixfile do
       maintainers: ["Sean Callan", "Alexander Stanko"],
       files: [
         "lib",
-        "tasks",
         "src/slime_parser.peg.eex",
         "src/slime_parser_transform.erl",
         "mix.exs",
@@ -57,8 +50,6 @@ defmodule Slime.Mixfile do
 
   def deps do
     [
-      # packrat parser-generator for PEGs
-      {:neotoma, "~> 1.7.3", manager: :rebar3},
       # Benchmarking tool
       {:benchfella, ">= 0.0.0", only: [:dev, :test], runtime: false},
       # Documentation
