@@ -1,0 +1,104 @@
+document <- (space? crlf)* doctype? tags? eof;
+
+doctype <- space? 'doctype' space name:(!eol .)+ eol (space? crlf)*;
+
+tag <- comment / verbatim_text / tag_item;
+tag_item <- space? (embedded_engine / inline_html / code / function_component / function_component_slot / slime_tag);
+
+tags <- (tag crlf*)+;
+nested_tags <- crlf+ indent tags dedent;
+
+inline_html <- &'<' text_item+ nested_tags?;
+
+slime_tag <- tag_shortcut tag_spaces space? tag_attributes_and_content;
+
+% NOTE: tag content cannot begin with attribute wrappers if attributes are not present.
+tag_attributes_and_content <- attributes space? tag_content
+  / !('(' / '[') tag_content;
+
+tag_content <- '/' / inline_tag / nested_tags / dynamic_content / inline_text / '';
+
+inline_tag <- ':' space? slime_tag;
+
+inline_text <- !eol text_block;
+
+dynamic_content <- '=' '='? space? (!eol .)+;
+
+function_component_slot <- '::' (function_component_slot_name) space? tag_attributes_and_content;
+
+function_component <- ':' (function_component_name) space? tag_attributes_and_content;
+
+code <- output:('=' '='? tag_spaces? / '-') space?
+  code:code_lines children:nested_tags? optional_else:code_else_condition?;
+code_else_condition <- crlf* space? '-' space? 'else' children:nested_tags?;
+code_lines <- code_line / code_line_with_break crlf code_lines;
+code_line <- (!(. eol) .)* !code_line_break . &eol;
+code_line_with_break <- (!(. eol) .)* code_line_break &eol;
+code_line_break <-  ',' / '\\';
+
+tag_spaces <- leading:'<'? trailing:'>'?;
+
+tag_shortcut <- tag:tag_name attrs:shortcuts / tag:tag_name / attrs:shortcuts;
+
+shortcuts <- head:shortcut tail:(shortcut)*;
+
+shortcut <- type:('.' / '#' / '@' / '$' / '%' / '^' / '&' / '+' / '!') value:shortcut_value;
+
+attributes <- wrapped_attributes / plain_attributes;
+
+wrapped_attributes <-
+  '(' crlf+ indent wrapped_attribute+ (eol / space)+ ')' / '(' wrapped_attribute+ ')' / '[' crlf+ indent wrapped_attribute+ (eol / space)+ ']' / '[' wrapped_attribute+ ']';
+
+wrapped_attribute <- (space / eol)* (attribute:attribute / attribute_name:tag_name);
+
+plain_attributes <- head:attribute tail:(space attribute)*;
+
+attribute <- attribute_name '=' '='? attribute_value;
+
+attribute_value <- simple:string / dynamic:(string_with_interpolation / attribute_code);
+
+string <- '"' ('\\' . / !('"' / '#{') .)* '"';
+string_with_interpolation <- '"' (elixir_interpolation / '\\' . / !'"' .)* '"';
+
+attribute_code <- (parentheses / brackets / braces / !(space / eol / ')' / ']' / '}') .)+;
+
+text_item <- static:text / dynamic:(safe:safe_interpolation / interpolation);
+text <- ('\\' . / !('#{' / eol) .)+;
+elixir_interpolation <- '#{' (string / string_with_interpolation / !'}' .)* '}';
+interpolation <- '#{' (string / string_with_interpolation / !'}' .)* '}';
+safe_interpolation <- '#{{' (string / string_with_interpolation / !'}}' .)* '}}';
+
+parentheses <- '(' (parentheses / !')' .)* ')';
+brackets <- '[' (brackets / !']' .)* ']';
+braces <- '{' (braces / !'}' .)* '}';
+
+comment <- html_comment / space? code_comment;
+
+html_comment <- indent:space? type:'/!' content:text_block;
+
+code_comment <- '/' text_block;
+
+verbatim_text <- indent:space? type:[|'] content:text_block;
+
+text_block <- indented_text_line (crlf
+  indent lines:text_block_nested_lines dedent)?;
+text_block_nested_lines <- indented_text_line (crlf (
+  indent lines:text_block_nested_lines dedent / lines:text_block_nested_lines
+))*;
+
+embedded_engine <- tag_name ':' (crlf indent lines:embedded_engine_lines dedent);
+embedded_engine_lines <- indented_text_line (crlf indented_text_line)*;
+
+indented_text_line <- space? text_item*;
+
+tag_name <- [a-zA-Z0-9_-]+;
+function_component_name <- [a-zA-Z0-9._-]+;
+function_component_slot_name <- [a-zA-Z0-9._-]+;
+shortcut_value <- ([:/]? [a-zA-Z0-9_-])+;
+attribute_name <- [a-zA-Z0-9._@:-]+;
+space <- [ \t]+;
+indent <- '\x{0E}';
+dedent <- '\x{0F}';
+crlf <- '\r'? '\n';
+eof <- !.;
+eol <- dedent / crlf / eof;
