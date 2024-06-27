@@ -12,7 +12,7 @@ defmodule Mix.Tasks.Compile.Peg do
     attr_list_delims = Application.get_env(
       :slime, :attr_list_delims, %{"[" => "]", "(" => ")", "{" => "}"}
     )
-    grammar = EEx.eval_file("src/slime_parser.peg.eex", attr_list_delims: attr_list_delims)
+    grammar = EEx.eval_file("src/slime_parser.peg.heex", attr_list_delims: attr_list_delims)
 
     if contents_changed?("src/slime_parser.peg", grammar) do
       compile_grammar("src/slime_parser.peg", grammar)

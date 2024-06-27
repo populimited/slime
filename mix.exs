@@ -43,7 +43,7 @@ defmodule Slime.Mixfile do
       maintainers: ["Sean Callan", "Alexander Stanko"],
       files: [
         "lib",
-        "src/slime_parser.peg.eex",
+        "src/slime_parser.peg.heex",
         "src/slime_parser_transform.erl",
         "mix.exs",
         "README*",
