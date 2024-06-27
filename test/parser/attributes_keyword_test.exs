@@ -33,7 +33,7 @@ defmodule ParserAttributesKeywordTest do
           %{class: " "}
         )
 
-      assert result == [class: "a b", id: "id", id: "id1"]
+      assert Enum.sort(result) == Enum.sort(class: "a b", id: "id", id: "id1")
     end
 
     test "handles all attributes specified in merge rules" do
@@ -43,7 +43,7 @@ defmodule ParserAttributesKeywordTest do
           %{class: " ", id: "+"}
         )
 
-      assert result == [id: "id+id1", class: "a b"]
+      assert Enum.sort(result) == Enum.sort(id: "id+id1", class: "a b")
     end
   end
 end

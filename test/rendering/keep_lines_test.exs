@@ -19,11 +19,7 @@ defmodule RenderKeepLinesTest do
     h3 lines
     """
 
-    assert render(slime) == """
-           <h1>test</h1>
-           <h2>multiple</h2>
-           <h3>lines</h3>
-           """
+    assert render(slime) == "<h1>test</h1>\n<h2>multiple</h2>\n<h3>lines</h3>"
   end
 
   test "Keep tags with childs lines" do
@@ -34,12 +30,7 @@ defmodule RenderKeepLinesTest do
       | lines
     """
 
-    assert render(slime) == """
-           <h1>
-           test
-           multiple
-           lines</h1>
-           """
+    assert render(slime) == "<h1>\ntest\nmultiple\nlines</h1>"
   end
 
   test "Keep lines when empty lines present" do
@@ -52,14 +43,7 @@ defmodule RenderKeepLinesTest do
       | lines
     """
 
-    assert render(slime) == """
-           <h1>
-
-
-           multiple
-
-           lines</h1>
-           """
+    assert render(slime) == "<h1>\n\n\nmultiple\n\nlines</h1>"
   end
 
   test "Keep lines for inline tags" do
@@ -67,9 +51,7 @@ defmodule RenderKeepLinesTest do
     h1: span test
     """
 
-    assert render(slime) == """
-           <h1><span>test</span></h1>
-           """
+    assert render(slime) == "<h1><span>test</span></h1>"
   end
 
   test "Keep lines for inline tags with children" do
@@ -78,10 +60,7 @@ defmodule RenderKeepLinesTest do
       span test 1
     """
 
-    assert render(slime) == """
-           <h1><span>
-           <span>test 1</span></span></h1>
-           """
+    assert render(slime) == "<h1><span>\n<span>test 1</span></span></h1>"
   end
 
   test "Keep lines for embedded engine (javascript)" do
@@ -90,10 +69,7 @@ defmodule RenderKeepLinesTest do
       console.log("test");
     """
 
-    assert render(slime) == """
-           <script>
-           console.log("test");</script>
-           """
+    assert render(slime) == "<script>\nconsole.log(\"test\");</script>"
   end
 
   test "Keep lines for embedded engine (elixir)" do
@@ -104,7 +80,7 @@ defmodule RenderKeepLinesTest do
     = a <> b
     """
 
-    assert render(slime) == "\n\n\ntesttest\n"
+    assert render(slime) == "\n\n\ntesttest"
   end
 
   test "Keep lines for embedded engine (eex)" do
@@ -114,6 +90,6 @@ defmodule RenderKeepLinesTest do
       Test <%= "test" %>
     """
 
-    assert render(slime) == "\nTest test\nTest test\n"
+    assert render(slime) == "\nTest test\nTest test"
   end
 end

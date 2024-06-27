@@ -1,7 +1,7 @@
 defmodule Slime.Mixfile do
   use Mix.Project
 
-  @version "1.2.1"
+  @version "1.0.0"
 
   def project do
     [
@@ -11,7 +11,7 @@ defmodule Slime.Mixfile do
       description: """
       An Elixir library for rendering Slim-like templates.
       """,
-      elixir: "~> 1.14",
+      elixir: "~> 1.17",
       package: package(),
       source_url: "https://github.com/slime-lang/slime",
       start_permanent: Mix.env() == :prod,
@@ -24,11 +24,10 @@ defmodule Slime.Mixfile do
 
   def application do
     [
-      applications: [:eex]
+      applications: [:phoenix_live_view, :phoenix_html, :eex]
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "dialyzer_checks"]
   defp elixirc_paths(_), do: ["lib"]
 
   def package do
@@ -50,17 +49,11 @@ defmodule Slime.Mixfile do
 
   def deps do
     [
-      # Benchmarking tool
-      {:benchfella, ">= 0.0.0", only: [:dev, :test], runtime: false},
       # Documentation
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      # Automatic test runner
-      {:mix_test_watch, ">= 0.0.0", only: :dev, runtime: false},
-      # Style linter
-      {:credo, ">= 0.0.0", only: [:dev, :test]},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:phoenix_live_view, "~> 0.20.17"},
       # HTML generation helpers
-      {:phoenix_html, "~> 2.14", only: :test}
+      {:phoenix_html, "~> 4.1.1"}
     ]
   end
 end

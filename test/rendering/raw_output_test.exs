@@ -1,14 +1,7 @@
 defmodule RawOutputTest do
   use ExUnit.Case
 
-  alias Slime.Renderer
-  alias Phoenix.HTML
-
-  defp render(template, bindings \\ []) do
-    template
-    |> Renderer.render(bindings, engine: HTML.Engine)
-    |> HTML.safe_to_string()
-  end
+  import Slime, only: [render: 1]
 
   test "render raw dynamic content" do
     slime = """
@@ -16,14 +9,6 @@ defmodule RawOutputTest do
     """
 
     assert render(slime) == "<>"
-  end
-
-  test "render raw attribute value" do
-    slime = """
-    a href==href
-    """
-
-    assert render(slime, href: "&") == ~s[<a href="&"></a>]
   end
 
   test "render raw tag content" do

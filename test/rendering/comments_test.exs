@@ -43,7 +43,7 @@ defmodule RenderCommentsTest do
   end
 
   test "/! renders comments with interpolation" do
-    slime = ~S(/! html comment with #{interpolation})
+    slime = ~S(/! html comment with #{@interpolation})
 
     html =
       """
@@ -51,6 +51,6 @@ defmodule RenderCommentsTest do
       """
       |> String.trim("\n")
 
-    assert render(slime, interpolation: "a") == html
+    assert render(slime, %{interpolation: "a"}) == html
   end
 end

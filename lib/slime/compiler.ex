@@ -45,6 +45,8 @@ defmodule Slime.Compiler do
   def compile(%HEExNode{} = tag, @heex_delimiters) do
     # Pass the HEExNode through to HTMLNode since it behaves identically
     tag = Map.put(tag, :__struct__, HTMLNode)
+    tag = if tag.children == [], do: Map.put(tag, :closed, true), else: tag
+
     compile(tag, @heex_delimiters)
   end
 

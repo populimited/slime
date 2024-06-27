@@ -9,7 +9,7 @@ defmodule RendererTest do
   html
     head
       meta name="keywords" description="slime"
-      title = site_title
+      title = @site_title
     body
       #id.class
         ul
@@ -36,7 +36,7 @@ defmodule RendererTest do
        <html>
        <head>
        <meta description="slime" name="keywords">
-       <title><%= site_title %></title>
+       <title><%= @site_title %></title>
        </head>
        <body>
        <div class="class" id="id">
@@ -55,7 +55,7 @@ defmodule RendererTest do
 
   describe "render/2" do
     test "render html" do
-      assert render(@slime, site_title: "Website Title") == @html
+      assert render(@slime, %{site_title: "Website Title"}) == @html
     end
 
     test "doctype" do
@@ -85,14 +85,14 @@ defmodule RendererTest do
       slime = """
       p
         s
-          = if a > 1 do
+          = if @a > 1 do
             = 1
           - else
             = 2
           \np
       """
 
-      assert render(slime, a: 2) == "<p><s>1</s></p><p></p>"
+      assert render(slime, %{a: 2}) == "<p><s>1</s></p><p></p>"
     end
 
     test "CRLF line endings are converted to LF" do

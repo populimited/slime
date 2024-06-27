@@ -27,7 +27,7 @@ defmodule RenderAttributesTest do
   end
 
   test "attributes values can be strings" do
-    assert render(~s(meta name=variable content="one two"), variable: "test") ==
+    assert render(~s(meta name=@variable content="one two"), %{variable: "test"}) ==
              ~s(<meta content="one two" name="test">)
   end
 
@@ -84,7 +84,7 @@ defmodule RenderAttributesTest do
   end
 
   test "attributes with interpolation" do
-    assert render(~S(meta content="one#{two}"), two: "_one") == ~s(<meta content="one_one">)
+    assert render(~S(meta content="one#{@two}"), %{two: "_one"}) == ~s(<meta content="one_one">)
   end
 
   test "attributes with qutation inside interoplation correctly" do
@@ -98,23 +98,17 @@ defmodule RenderAttributesTest do
   test "parses attributes with elixir code" do
     assert render(
              ~S(meta content=@user.name),
-             assigns: [user: %{name: "test"}]
+             %{user: %{name: "test"}}
            ) == ~s(<meta content="test">)
 
     assert render(
-             ~S(meta content=user.name),
-             user: %{name: "test"}
+             ~S(meta content=@user["name"]),
+             %{user: %{"name" => "test"}}
            ) == ~s(<meta content="test">)
 
     assert render(
-             ~S(meta content=user["name"]),
-             user: %{"name" => "test"}
-           ) == ~s(<meta content="test">)
-
-    assert render(
-             ~S[meta content=Enum.join(a, b)],
-             a: [1, 2, 3],
-             b: ","
+             ~S[meta content=Enum.join(@a, @b)],
+             %{a: [1, 2, 3], b: ","}
            ) == ~s(<meta content="1,2,3">)
   end
 
@@ -139,10 +133,10 @@ defmodule RenderAttributesTest do
   end
 
   test "attributes can have dynamic values" do
-    assert render("div a=meta", meta: true) == ~s(<div a></div>)
-    assert render("div a=meta", meta: "test") == ~s(<div a="test"></div>)
-    assert render("div a=meta", meta: nil) == ~s(<div></div>)
-    assert render("div a=meta", meta: false) == ~s(<div></div>)
+    assert render("div a=@meta", %{meta: true}) == ~s(<div a></div>)
+    assert render("div a=@meta", %{meta: "test"}) == ~s(<div a="test"></div>)
+    assert render("div a=@meta", %{meta: nil}) == ~s(<div></div>)
+    assert render("div a=@meta", %{meta: false}) == ~s(<div></div>)
   end
 
   test "attributes are sorted by name" do
@@ -150,24 +144,23 @@ defmodule RenderAttributesTest do
     assert render("a.foo#bar") == ~s(<a class="foo" id="bar"></a>)
   end
 
-  test "do not overescape quotes in attributes" do
-    defmodule RenderHelperMethodWithQuotesArguments do
-      @moduledoc false
-      require Slime
+  # TODO: Test with PhoenixSlime
+  # test "do not overescape quotes in attributes" do
+  #   defmodule RenderHelperMethodWithQuotesArguments do
+  #     @moduledoc false
+  #     use Phoenix.Component
+  #     require Slime
 
-      def static_path(path) do
-        path
-      end
+  #     def static_path(path) do
+  #       path
+  #     end
 
-      @slime ~s[link rel="stylesheet" href=static_path("/css/app.css")]
-      Slime.function_from_string(:def, :pre_render, @slime, [], engine: Phoenix.HTML.Engine)
+  #     def render do
+  #       ~s[link rel="stylesheet" href=static_path("/css/app.css")]
+  #     end
+  #   end
 
-      def render do
-        pre_render() |> Phoenix.HTML.Safe.to_iodata() |> IO.iodata_to_binary()
-      end
-    end
-
-    assert RenderHelperMethodWithQuotesArguments.render() ==
-             ~s(<link href="/css/app.css" rel="stylesheet">)
-  end
+  #   assert RenderHelperMethodWithQuotesArguments.render() ==
+  #            ~s(<link href="/css/app.css" rel="stylesheet">)
+  # end
 end

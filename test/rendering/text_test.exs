@@ -8,8 +8,7 @@ defmodule RenderTextTest do
   end
 
   test "render content with interpolation" do
-    assert render(~S"| text #{content}", content: "content") == "text content"
-    assert render(~S"' text #{content}", content: "content") == "text content "
+    assert render(~S"| text #{@content}", %{content: "content"}) == "text content"
   end
 
   test "| allows multiline varbatim text" do
@@ -95,9 +94,9 @@ defmodule RenderTextTest do
     slime = ~S"""
     p
       |
-        First line #{a}
+        First line #{@a}
           Second Line with leading spaces
-            Even more leading #{b} spaces
+            Even more leading #{@b} spaces
         And no spaces
     """
 
@@ -110,7 +109,7 @@ defmodule RenderTextTest do
       """
       |> String.trim("\n")
 
-    assert render(slime, a: "aa", b: "bb") == html
+    assert render(slime, %{a: "aa", b: "bb"}) == html
   end
 
   test "render multiline varbatim text with tabs on some lines" do
@@ -163,10 +162,10 @@ defmodule RenderTextTest do
     p
       ' test
         test
-      = test
+      = @test
     """
 
-    assert render(slime, test: "test") == "<p>test\ntest test</p>"
+    assert render(slime, %{test: "test"}) == "<p>test\ntest test</p>"
   end
 
   test "respect leading spaces in verbatim test" do

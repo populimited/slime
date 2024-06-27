@@ -39,26 +39,26 @@ defmodule RenderElixirTest do
 
   test "if/else can be used in templates" do
     slime = """
-    = if meta do
+    = if @meta do
       h1 Hello!
     - else
       h2 Goodbye!
     """
 
-    assert render(slime, meta: true) == ~s(<h1>Hello!</h1>)
-    assert render(slime, meta: false) == ~s(<h2>Goodbye!</h2>)
+    assert render(slime, %{meta: true}) == ~s(<h1>Hello!</h1>)
+    assert render(slime, %{meta: false}) == ~s(<h2>Goodbye!</h2>)
   end
 
   test "unless/else can be used in templates" do
     slime = """
-    = unless meta do
+    = unless @meta do
       h1 Hello!
     - else
       h2 Goodbye!
     """
 
-    assert render(slime, meta: true) == ~s(<h2>Goodbye!</h2>)
-    assert render(slime, meta: false) == ~s(<h1>Hello!</h1>)
+    assert render(slime, %{meta: true}) == ~s(<h2>Goodbye!</h2>)
+    assert render(slime, %{meta: false}) == ~s(<h1>Hello!</h1>)
   end
 
   test "render lines with 'do'" do
@@ -139,7 +139,7 @@ defmodule RenderElixirTest do
 
   test "render for loop with nested ifs separated by blank line" do
     slime = ~S"""
-    = for question <- questions do
+    = for question <- @questions do
       - type = question.type
       = if type do
         div class=type
@@ -148,7 +148,7 @@ defmodule RenderElixirTest do
         h3 = question.title
     """
 
-    assert render(slime, questions: [%{type: "te", title: "st"}]) ==
+    assert render(slime, %{questions: [%{type: "te", title: "st"}]}) ==
              ~s(<div class="te"></div><h3>st</h3>)
   end
 end

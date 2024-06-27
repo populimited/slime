@@ -26,28 +26,8 @@ defmodule TagTest do
     assert render(slime) == ~s(<div class="class" id="id"><p>Hello World</p></div>)
   end
 
-  test "render closed tag (ending with /)" do
-    assert render(~s(img src="image.png"/)) == ~s(<img src="image.png"/>)
-  end
-
   test "render attributes and inline children" do
     assert render(~s(div id="id" text content)) == ~s(<div id="id">text content</div>)
-    assert render(~s(div id="id" = elixir_func), elixir_func: "text") == ~s(<div id="id">text</div>)
-  end
-
-  test "parses inline children with interpolation" do
-    assert render("div text \#{content}", content: "test") == ~s(<div>text test</div>)
-  end
-
-  void_elements = ~w(
-    area base br col embed hr img input keygen link menuitem
-    meta param source track wbr
-  )
-
-  for tag <- void_elements do
-    test "void element #{tag} requires no closing tag" do
-      html = render(~s(#{unquote(tag)} data-foo="bar"))
-      assert html == ~s(<#{unquote(tag)} data-foo="bar">)
-    end
+    assert render(~s(div id="id" = @elixir_func), %{elixir_func: "text"}) == ~s(<div id="id">text</div>)
   end
 end

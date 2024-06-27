@@ -310,7 +310,7 @@ would create the following output:
 ```
 <.greet user={@current_user.name}>Hello there!</.greet>
 ```
-When using slime with Phoenix, the `phoenix_slime` package will call `precompile_heex/2` and pass the resulting valid HEEx to [`EEx`](https://hexdocs.pm/eex/EEx.html) with [`Phoenix.LiveView.HTMLEngine`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.HTMLEngine.html#handle_text/3) as the `engine:` option.  This will produce the final html.
+When using slime with Phoenix, the `phoenix_slime` package will call `precompile/2` and pass the resulting valid HEEx to [`EEx`](https://hexdocs.pm/eex/EEx.html) with [`Phoenix.LiveView.HTMLEngine`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.HTMLEngine.html#handle_text/3) as the `engine:` option.  This will produce the final html.
 
 # HEEx Slot Components
 ```slim

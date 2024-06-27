@@ -9,7 +9,7 @@ defmodule RenderInlineHTMLTest do
       title Example
     <body>
       table
-        = for a <- articles do
+        = for a <- @articles do
           <tr><td>#{a.name}</td><td>#{a.desc}</td></tr>
     </body>
   </html>
@@ -31,7 +31,7 @@ defmodule RenderInlineHTMLTest do
 
   test "render inline html with for loop" do
     articles = [%{name: "Art 1", desc: "Desc 1"}, %{name: "Art 2", desc: "Desc 2"}]
-    assert render(@inline_slime, articles: articles) == @inline_html
+    assert render(@inline_slime, %{articles: articles}) == @inline_html
   end
 
   test "render inline html" do
@@ -39,7 +39,7 @@ defmodule RenderInlineHTMLTest do
   end
 
   test "render inline html with interpolation" do
-    assert render(~S(<h3>Text" #{val}</h3>), val: "test") == ~S[<h3>Text" test</h3>]
+    assert render(~S(<h3>Text" #{@val}</h3>), %{val: "test"}) == ~S[<h3>Text" test</h3>]
   end
 
   test "render quote inline html with interpolation" do
