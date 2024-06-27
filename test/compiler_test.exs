@@ -6,7 +6,7 @@ defmodule CompilerTest do
   alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HTMLNode, VerbatimTextNode}
 
   defp compile(tree) do
-    Compiler.compile(tree, Compiler.heex_delimiters())
+    Compiler.compile(tree)
   end
 
   describe "compile/1" do

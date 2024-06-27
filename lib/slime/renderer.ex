@@ -5,8 +5,6 @@ defmodule Slime.Renderer do
   alias Slime.Compiler
   alias Slime.Parser
 
-  import Compiler, only: [heex_delimiters: 0]
-
   @doc """
   Compile Slime template to valid HEEx HTML.
 
@@ -17,7 +15,7 @@ defmodule Slime.Renderer do
   def precompile(input) do
     input
     |> Parser.parse()
-    |> Compiler.compile(heex_delimiters())
+    |> Compiler.compile()
   end
 
   @doc """
