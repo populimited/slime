@@ -143,24 +143,4 @@ defmodule RenderAttributesTest do
     assert render("a#bar.foo") == ~s(<a class="foo" id="bar"></a>)
     assert render("a.foo#bar") == ~s(<a class="foo" id="bar"></a>)
   end
-
-  # TODO: Test with PhoenixSlime
-  # test "do not overescape quotes in attributes" do
-  #   defmodule RenderHelperMethodWithQuotesArguments do
-  #     @moduledoc false
-  #     use Phoenix.Component
-  #     require Slime
-
-  #     def static_path(path) do
-  #       path
-  #     end
-
-  #     def render do
-  #       ~s[link rel="stylesheet" href=static_path("/css/app.css")]
-  #     end
-  #   end
-
-  #   assert RenderHelperMethodWithQuotesArguments.render() ==
-  #            ~s(<link href="/css/app.css" rel="stylesheet">)
-  # end
 end

@@ -1,5 +1,7 @@
 import Config
 
+config :phoenix, :template_engines, sheex: Slime.Engine
+
 if Mix.env() == :test do
   config :slime, :attr_list_delims, %{"[" => "]", "(" => ")"}
 
