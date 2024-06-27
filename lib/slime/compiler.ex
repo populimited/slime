@@ -7,9 +7,6 @@ defmodule Slime.Compiler do
 
   alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HEExNode, HTMLCommentNode, HTMLNode, InlineHTMLNode, VerbatimTextNode}
 
-  alias Slime.TemplateSyntaxError
-
-  @eex_delimiters {"#" <> "{", "}"}
   @heex_delimiters {"{", "}"}
 
   @void_elements ~w(
@@ -17,7 +14,6 @@ defmodule Slime.Compiler do
     keygen source menuitem track wbr
   )
 
-  def eex_delimiters, do: @eex_delimiters
   def heex_delimiters, do: @heex_delimiters
 
   def compile([], _delimiters), do: ""
@@ -31,16 +27,6 @@ defmodule Slime.Compiler do
 
   def compile(%DoctypeNode{name: name}, _delimiters), do: Doctype.for(name)
   def compile(%VerbatimTextNode{content: content}, delimiters), do: compile(content, delimiters)
-
-  def compile(%HEExNode{}, @eex_delimiters) do
-    # Raise an error if the user generates a HEEx node (by using a :) but the target is EEx
-
-    raise TemplateSyntaxError,
-      line: 0,
-      message: "I found a HEEx component, but this is not compiling to a HEEx file",
-      line_number: 0,
-      column: 0
-  end
 
   def compile(%HEExNode{} = tag, @heex_delimiters) do
     # Pass the HEExNode through to HTMLNode since it behaves identically
@@ -154,22 +140,6 @@ defmodule Slime.Compiler do
     # String with interpolation or string concatination
     expression = if safe == :eex, do: content, else: "{:safe, #{content}}"
     ~s[ #{name}={#{expression}}]
-  end
-
-  defp render_attribute_code(name, content, {op, _, _}, safe, @eex_delimiters) when op in [:<<>>, :<>] do
-    expression = if safe == :eex, do: content, else: "{:safe, #{content}}"
-    ~s[ #{name}="<%= #{expression} %>"]
-  end
-
-  defp render_attribute_code(name, content, _, safe, @eex_delimiters) do
-    # When rendering to traditional EEx
-    value = if safe == :eex, do: "slim__v", else: "{:safe, slim__v}"
-
-    """
-    <% slim__k = "#{name}"; slim__v = Slime.Compiler.hide_dialyzer_spec(#{content}) %>\
-    <%= if slim__v do %> <%= slim__k %><%= unless slim__v == true do %>\
-    ="<%= #{value} %>"<% end %><% end %>\
-    """
   end
 
   defp render_attribute_code(name, content, _, _safe, @heex_delimiters) do

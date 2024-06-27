@@ -6,7 +6,7 @@ defmodule CompilerTest do
   alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HTMLNode, VerbatimTextNode}
 
   defp compile(tree) do
-    Compiler.compile(tree, Compiler.eex_delimiters())
+    Compiler.compile(tree, Compiler.heex_delimiters())
   end
 
   describe "compile/1" do
@@ -17,20 +17,7 @@ defmodule CompilerTest do
 
     test "renders eex attributes" do
       tree = [%HTMLNode{name: "div", attributes: [{"id", {:eex, "variable"}}, {"class", ["class"]}]}]
-
-      expected =
-        """
-        <div
-        <% slim__k = "id"; slim__v = Slime.Compiler.hide_dialyzer_spec(variable) %>
-        <%= if slim__v do %>
-         <%= slim__k %>
-        <%= unless slim__v == true do %>
-        ="<%= slim__v %>"<% end %><% end %> class="class">
-        </div>
-        """
-        |> String.replace("\n", "")
-
-      assert compile(tree) == expected
+      assert compile(tree) == "<div id={variable} class=\"class\"></div>"
     end
 
     test "renders eex" do
