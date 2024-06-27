@@ -3,9 +3,9 @@ defmodule Slime.Parser.EmbeddedEngine do
   Embedded engine behaviour module.
   Provides basic logic of parsing slime with embedded parts for other engines.
   """
-  alias Slime.Parser.Nodes.EExNode
+  alias Slime.Parser.Nodes.HEExNode
 
-  @type parser_tag :: binary | {binary, Keyword.t()} | %EExNode{}
+  @type parser_tag :: binary | {binary, Keyword.t()} | %HEExNode{}
   @type engine_input :: [binary | {:eex, binary}]
   @callback render(engine_input, Keyword.t()) :: parser_tag
 
@@ -69,7 +69,7 @@ defmodule Slime.Parser.EmbeddedEngine.Elixir do
 
   @behaviour Slime.Parser.EmbeddedEngine
 
-  alias Slime.Parser.Nodes.EExNode
+  alias Slime.Parser.Nodes.HEExNode
 
   def render(text, options) do
     newlines =
@@ -86,7 +86,7 @@ defmodule Slime.Parser.EmbeddedEngine.Elixir do
         text -> text
       end)
 
-    %EExNode{content: eex, children: newlines}
+    %HEExNode{content: eex, children: newlines}
   end
 end
 

@@ -3,7 +3,7 @@ defmodule ParserTest do
 
   import Slime.Parser, only: [parse: 1]
 
-  alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HTMLCommentNode, HTMLNode, InlineHTMLNode, VerbatimTextNode}
+  alias Slime.Parser.Nodes.{DoctypeNode, HEExNode, HTMLCommentNode, HTMLNode, InlineHTMLNode, VerbatimTextNode}
 
   describe "parse/1" do
     test "nested tags with blank lines" do
@@ -116,24 +116,24 @@ defmodule ParserTest do
       """
 
       assert parse(slime) == [
-        %Slime.Parser.Nodes.HEExNode{
-          name: ".button",
-          attributes: [{"class", "it-works"}],
-          spaces: %{},
-          closed: false,
-          children: [
-            %Slime.Parser.Nodes.VerbatimTextNode{content: ["This renders"]},
-            %Slime.Parser.Nodes.HTMLNode{
-              name: "strong",
-              attributes: [],
-              spaces: %{},
-              closed: false,
-              children: [%Slime.Parser.Nodes.VerbatimTextNode{content: ["inside"]}]
-            },
-            %Slime.Parser.Nodes.VerbatimTextNode{content: ["the button!"]}
-          ]
-        }
-      ]
+               %Slime.Parser.Nodes.ComponentNode{
+                 name: ".button",
+                 attributes: [{"class", "it-works"}],
+                 spaces: %{},
+                 closed: false,
+                 children: [
+                   %Slime.Parser.Nodes.VerbatimTextNode{content: ["This renders"]},
+                   %Slime.Parser.Nodes.HTMLNode{
+                     name: "strong",
+                     attributes: [],
+                     spaces: %{},
+                     closed: false,
+                     children: [%Slime.Parser.Nodes.VerbatimTextNode{content: ["inside"]}]
+                   },
+                   %Slime.Parser.Nodes.VerbatimTextNode{content: ["the button!"]}
+                 ]
+               }
+             ]
     end
 
     test "component slots" do
@@ -145,29 +145,29 @@ defmodule ParserTest do
       """
 
       assert parse(slime) == [
-        %Slime.Parser.Nodes.HEExNode{
-          name: ".modal",
-          attributes: [],
-          spaces: %{},
-          closed: false,
-          children: [
-            %Slime.Parser.Nodes.VerbatimTextNode{
-              content: ["This is the body, everything not in a named slot is rendered in the default slot."]
-            },
-            %Slime.Parser.Nodes.HEExNode{
-              name: ":footer",
-              attributes: [],
-              spaces: %{},
-              closed: false,
-              children: [
-                %Slime.Parser.Nodes.VerbatimTextNode{
-                  content: ["This is the bottom of the modal."]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+               %Slime.Parser.Nodes.ComponentNode{
+                 name: ".modal",
+                 attributes: [],
+                 spaces: %{},
+                 closed: false,
+                 children: [
+                   %Slime.Parser.Nodes.VerbatimTextNode{
+                     content: ["This is the body, everything not in a named slot is rendered in the default slot."]
+                   },
+                   %Slime.Parser.Nodes.ComponentNode{
+                     name: ":footer",
+                     attributes: [],
+                     spaces: %{},
+                     closed: false,
+                     children: [
+                       %Slime.Parser.Nodes.VerbatimTextNode{
+                         content: ["This is the bottom of the modal."]
+                       }
+                     ]
+                   }
+                 ]
+               }
+             ]
     end
 
     test "attributes" do
@@ -241,15 +241,15 @@ defmodule ParserTest do
       """
 
       assert parse(slime) == [
-               %EExNode{
+               %HEExNode{
                  content: "for thing <- stuff do",
                  output: true,
                  children: [
-                   %EExNode{content: "output = process(thing)"},
+                   %HEExNode{content: "output = process(thing)"},
                    %HTMLNode{
                      name: "p",
                      children: [
-                       %EExNode{content: "output", output: true}
+                       %HEExNode{content: "output", output: true}
                      ]
                    }
                  ]
@@ -274,12 +274,12 @@ defmodule ParserTest do
                %HTMLNode{
                  name: "main",
                  children: [
-                   %EExNode{
+                   %HEExNode{
                      content: "if condition do",
                      output: true,
                      children: [
                        %VerbatimTextNode{content: ["Something"]},
-                       %EExNode{
+                       %HEExNode{
                          content: "else",
                          children: [
                            %VerbatimTextNode{content: ["Something else"]}
@@ -319,7 +319,7 @@ defmodule ParserTest do
                %HTMLNode{
                  name: "p",
                  attributes: [{"some-attribute", {:eex, "inline"}}],
-                 children: [%EExNode{content: "hey", output: true}]
+                 children: [%HEExNode{content: "hey", output: true}]
                },
                %HTMLNode{name: "span", children: [%VerbatimTextNode{content: ["Text"]}]}
              ]
@@ -370,7 +370,7 @@ defmodule ParserTest do
                        %HTMLNode{
                          name: "table",
                          children: [
-                           %EExNode{
+                           %HEExNode{
                              content: "for a <- articles do",
                              output: true,
                              children: [

@@ -5,7 +5,15 @@ defmodule Slime.Compiler do
 
   alias Slime.Doctype
 
-  alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HEExNode, HTMLCommentNode, HTMLNode, InlineHTMLNode, VerbatimTextNode}
+  alias Slime.Parser.Nodes.{
+    DoctypeNode,
+    HEExNode,
+    ComponentNode,
+    HTMLCommentNode,
+    HTMLNode,
+    InlineHTMLNode,
+    VerbatimTextNode
+  }
 
   @void_elements ~w(
     area br col doctype embed hr img input link meta base param
@@ -24,8 +32,8 @@ defmodule Slime.Compiler do
   def compile(%DoctypeNode{name: name}), do: Doctype.for(name)
   def compile(%VerbatimTextNode{content: content}), do: compile(content)
 
-  def compile(%HEExNode{} = tag) do
-    # Pass the HEExNode through to HTMLNode since it behaves identically
+  def compile(%ComponentNode{} = tag) do
+    # Pass the ComponentNode through to HTMLNode since it behaves identically
     tag = Map.put(tag, :__struct__, HTMLNode)
     tag = if tag.children == [], do: Map.put(tag, :closed, true), else: tag
 
@@ -51,7 +59,7 @@ defmodule Slime.Compiler do
     leading_space(spaces) <> body <> trailing_space(spaces)
   end
 
-  def compile(%EExNode{content: code, spaces: spaces, output: output} = eex) do
+  def compile(%HEExNode{content: code, spaces: spaces, output: output} = eex) do
     code = if eex.safe?, do: "{:safe, " <> code <> "}", else: code
     opening = if(output, do: "<%= ", else: "<% ") <> code <> " %>"
 

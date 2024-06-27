@@ -19,7 +19,7 @@ defmodule Slime.Parser.Nodes do
               children: []
   end
 
-  defmodule EExNode do
+  defmodule HEExNode do
     @moduledoc """
     An embedded code node.
 
@@ -38,7 +38,7 @@ defmodule Slime.Parser.Nodes do
               safe?: false
   end
 
-  defmodule HEExNode do
+  defmodule ComponentNode do
     @moduledoc """
     An HTML node that represents a HEEx function component.
 
@@ -62,7 +62,7 @@ defmodule Slime.Parser.Nodes do
     @moduledoc """
     A verbatim text node.
 
-    * :content — a list of strings and %EExNode{} structs that
+    * :content — a list of strings and %HEExNode{} structs that
     is concatenated during rendering. No newlines or spaces
     are inserted between individual items.
     """

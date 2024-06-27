@@ -3,7 +3,7 @@ defmodule CompilerTest do
 
   alias Slime.Compiler
 
-  alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HTMLNode, VerbatimTextNode}
+  alias Slime.Parser.Nodes.{DoctypeNode, HEExNode, HTMLNode, VerbatimTextNode}
 
   defp compile(tree) do
     Compiler.compile(tree)
@@ -22,7 +22,7 @@ defmodule CompilerTest do
 
     test "renders eex" do
       tree = [
-        %EExNode{
+        %HEExNode{
           content: ~s(number_input f, :amount, class: "js-donation-amount"),
           output: true
         }
@@ -34,12 +34,12 @@ defmodule CompilerTest do
 
     test "inserts 'end' tokens for do blocks and anonymous functions" do
       tree = [
-        %EExNode{
+        %HEExNode{
           content: "Enum.map stars, fn star ->",
           output: true,
-          children: [[%EExNode{content: ~s(star <> "s"), output: true}]]
+          children: [[%HEExNode{content: ~s(star <> "s"), output: true}]]
         },
-        %EExNode{content: "if welcome do", output: true, children: [[%VerbatimTextNode{content: ["Hello!"]}]]}
+        %HEExNode{content: "if welcome do", output: true, children: [[%VerbatimTextNode{content: ["Hello!"]}]]}
       ]
 
       expected =
@@ -58,8 +58,8 @@ defmodule CompilerTest do
 
     test "does not insert 'end' tokens for inline blocks" do
       tree = [
-        %EExNode{content: ~s(if true, do: "ok"), output: true},
-        %EExNode{content: ~s{Enum.map([], fn (_) -> "ok" end)}, output: true}
+        %HEExNode{content: ~s(if true, do: "ok"), output: true},
+        %HEExNode{content: ~s{Enum.map([], fn (_) -> "ok" end)}, output: true}
       ]
 
       expected =
