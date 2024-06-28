@@ -14,7 +14,7 @@ slime_tag <- tag_shortcut tag_spaces space? tag_attributes_and_content;
 
 % NOTE: tag content cannot begin with attribute wrappers if attributes are not present.
 tag_attributes_and_content <- attributes space? tag_content
-  / !('(' / '[' / '{') tag_content;
+  / !('(' / '[') tag_content;
 
 tag_content <- '/' / inline_tag / nested_tags / dynamic_content / inline_text / '';
 
@@ -47,7 +47,7 @@ shortcut <- type:('.' / '#' / '@' / '$' / '%' / '^' / '&' / '+' / '!') value:sho
 attributes <- wrapped_attributes / plain_attributes;
 
 wrapped_attributes <-
-  '(' crlf+ indent wrapped_attribute+ (eol / space)+ ')' / '(' wrapped_attribute+ ')' / '[' crlf+ indent wrapped_attribute+ (eol / space)+ ']' / '[' wrapped_attribute+ ']' / '{' crlf+ indent wrapped_attribute+ (eol / space)+ '}' / '{' wrapped_attribute+ '}';
+  '(' crlf+ indent wrapped_attribute+ (eol / space)+ ')' / '(' wrapped_attribute+ ')' / '[' crlf+ indent wrapped_attribute+ (eol / space)+ ']' / '[' wrapped_attribute+ ']';
 
 wrapped_attribute <- (space / eol)* (attribute:attribute / attribute_name:tag_name);
 

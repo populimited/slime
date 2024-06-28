@@ -22,6 +22,7 @@ defmodule Slime.Parser do
 
   defp syntax_error(input, indented_input, error) do
     {_reason, error, {{:line, line}, {:column, column}}} = error
+    IO.inspect(line)
     indented_line = indented_input |> String.split("\n") |> Enum.at(line - 1)
     input_line = input |> String.split("\n") |> Enum.at(line - 1)
     indent = Preprocessor.indent_meta_symbol()

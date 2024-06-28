@@ -62,7 +62,7 @@ parse(Input) when is_binary(Input) ->
 
 -spec 'tag_attributes_and_content'(input(), index()) -> parse_result().
 'tag_attributes_and_content'(Input, Index) ->
-  p(Input, Index, 'tag_attributes_and_content', fun(I,D) -> (p_choose([p_seq([fun 'attributes'/2, p_optional(fun 'space'/2), fun 'tag_content'/2]), p_seq([p_not(p_choose([p_string(<<"(">>), p_string(<<"[">>), p_string(<<"{">>)])), fun 'tag_content'/2])]))(I,D) end, fun(Node, Idx) ->transform('tag_attributes_and_content', Node, Idx) end).
+  p(Input, Index, 'tag_attributes_and_content', fun(I,D) -> (p_choose([p_seq([fun 'attributes'/2, p_optional(fun 'space'/2), fun 'tag_content'/2]), p_seq([p_not(p_choose([p_string(<<"(">>), p_string(<<"[">>)])), fun 'tag_content'/2])]))(I,D) end, fun(Node, Idx) ->transform('tag_attributes_and_content', Node, Idx) end).
 
 -spec 'tag_content'(input(), index()) -> parse_result().
 'tag_content'(Input, Index) ->
@@ -134,7 +134,7 @@ parse(Input) when is_binary(Input) ->
 
 -spec 'wrapped_attributes'(input(), index()) -> parse_result().
 'wrapped_attributes'(Input, Index) ->
-  p(Input, Index, 'wrapped_attributes', fun(I,D) -> (p_choose([p_seq([p_string(<<"(">>), p_one_or_more(fun 'crlf'/2), fun 'indent'/2, p_one_or_more(fun 'wrapped_attribute'/2), p_one_or_more(p_choose([fun 'eol'/2, fun 'space'/2])), p_string(<<")">>)]), p_seq([p_string(<<"(">>), p_one_or_more(fun 'wrapped_attribute'/2), p_string(<<")">>)]), p_seq([p_string(<<"[">>), p_one_or_more(fun 'crlf'/2), fun 'indent'/2, p_one_or_more(fun 'wrapped_attribute'/2), p_one_or_more(p_choose([fun 'eol'/2, fun 'space'/2])), p_string(<<"]">>)]), p_seq([p_string(<<"[">>), p_one_or_more(fun 'wrapped_attribute'/2), p_string(<<"]">>)]), p_seq([p_string(<<"{">>), p_one_or_more(fun 'crlf'/2), fun 'indent'/2, p_one_or_more(fun 'wrapped_attribute'/2), p_one_or_more(p_choose([fun 'eol'/2, fun 'space'/2])), p_string(<<"}">>)]), p_seq([p_string(<<"{">>), p_one_or_more(fun 'wrapped_attribute'/2), p_string(<<"}">>)])]))(I,D) end, fun(Node, Idx) ->transform('wrapped_attributes', Node, Idx) end).
+  p(Input, Index, 'wrapped_attributes', fun(I,D) -> (p_choose([p_seq([p_string(<<"(">>), p_one_or_more(fun 'crlf'/2), fun 'indent'/2, p_one_or_more(fun 'wrapped_attribute'/2), p_one_or_more(p_choose([fun 'eol'/2, fun 'space'/2])), p_string(<<")">>)]), p_seq([p_string(<<"(">>), p_one_or_more(fun 'wrapped_attribute'/2), p_string(<<")">>)]), p_seq([p_string(<<"[">>), p_one_or_more(fun 'crlf'/2), fun 'indent'/2, p_one_or_more(fun 'wrapped_attribute'/2), p_one_or_more(p_choose([fun 'eol'/2, fun 'space'/2])), p_string(<<"]">>)]), p_seq([p_string(<<"[">>), p_one_or_more(fun 'wrapped_attribute'/2), p_string(<<"]">>)])]))(I,D) end, fun(Node, Idx) ->transform('wrapped_attributes', Node, Idx) end).
 
 -spec 'wrapped_attribute'(input(), index()) -> parse_result().
 'wrapped_attribute'(Input, Index) ->

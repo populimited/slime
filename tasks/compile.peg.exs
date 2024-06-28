@@ -33,7 +33,7 @@ defmodule Mix.Tasks.Compile.Peg do
 
   defp compile_grammar(file, grammar) do
     File.write!(file, grammar)
-    peg = file |> Path.expand |> String.to_charlist
+    peg = file |> Path.expand() |> String.to_charlist()
     case :neotoma.file(peg, transform_module: :slime_parser_transform) do
       :ok -> :ok
       {:error, reason} ->
