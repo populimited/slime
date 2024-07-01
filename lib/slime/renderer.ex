@@ -23,8 +23,7 @@ defmodule Slime.Renderer do
   the resulting HTML.
 
   Note that this method of rendering is substantially slower than rendering
-  precompiled templates created with Slime.function_from_file/5 and
-  Slime.function_from_string/5.
+  precompiled templates created directly through Phoenix Components
   """
 
   def render(slime, bindings \\ []) do

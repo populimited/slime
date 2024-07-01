@@ -352,20 +352,6 @@ def button(assigns) do
 end
 ```
 
-## Precompilation
-
-Templates can be compiled into module functions like EEx templates, using
-functions `Slime.function_from_file/5` and
-`Slime.function_from_string/5`.
-
-To use slime templates (and Slime) with
-[Phoenix][phoenix], please see
-[PhoenixSlime][phoenix-slime].
-
-[phoenix]: http://www.phoenixframework.org/
-[phoenix-slime]: https://github.com/slime-lang/phoenix_slime
-
-
 ## Differences to Ruby Slim
 
 We aim for feature parity with the original [Slim](http://slim-lang.com)

@@ -61,22 +61,6 @@ defmodule RenderElixirTest do
     assert render(slime, %{meta: false}) == ~s(<h1>Hello!</h1>)
   end
 
-  test "render lines with 'do'" do
-    defmodule RenderHelperMethodWithDoInArguments do
-      @moduledoc false
-      require Slime
-
-      def number_input(_, _, _) do
-        "ok"
-      end
-
-      @slim ~s(= number_input f, :amount, class: "js-donation-amount")
-      Slime.function_from_string(:def, :render, @slim, [:f])
-    end
-
-    assert RenderHelperMethodWithDoInArguments.render(nil) == "ok"
-  end
-
   test "render lines broken by ," do
     slime = """
     = Enum.join(["first",
