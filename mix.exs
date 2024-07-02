@@ -18,7 +18,7 @@ defmodule Slime.Mixfile do
       description: """
       An Elixir library for rendering Slim-like templates.
       """,
-      elixir: "~> 1.17",
+      elixir: "~> 1.16",
       package: package(),
       source_url: "https://github.com/slime-lang/slime",
       start_permanent: Mix.env() == :prod,
