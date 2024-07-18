@@ -1,23 +1,18 @@
-# Slime [![Continuous Integration][github-img]][github] [![Hex Version][hex-img]][hex] [![License][license-img]][license]
-
-[github-img]: https://github.com/slime-lang/slime/actions/workflows/ci.yml/badge.svg
-[github]: https://github.com/slime-lang/slime/actions/workflows/ci.yml
-[hex-img]: https://img.shields.io/hexpm/v/slime.svg
-[hex]: https://hex.pm/packages/slime
-[license-img]: http://img.shields.io/badge/license-MIT-brightgreen.svg
-[license]: http://opensource.org/licenses/MIT
-
+# Slime
 > A refreshing way to slim down your markup in Elixir.
 
 Slime is an [Elixir][elixir] library for rendering [Slim][slim]-like
-templates as HTML.
+templates as HTML using Phoenix's [heex][HEEx] Template Engine.
 
-For use with [Phoenix][phoenix], please see [PhoenixSlime][phoenix-slime].
+This library is a fork combination from [@tensiondriven/slime][tslime] and [@tensiondriven/phoenix_slime][t_phoenix_slime]
 
+[heex]: https://hexdocs.pm/phoenix/components.html
 [slim]: http://slim-lang.com
 [elixir]: http://elixir-lang.com
 [phoenix]: http://www.phoenixframework.org/
 [phoenix-slime]: https://github.com/slime-lang/phoenix_slime
+[tslime]: https://github.com/tensiondriven/slime
+[t_phoenix_slime]: https://github.com/tensiondriven/phoenix_slime
 
 Easily turn this:
 
@@ -57,13 +52,6 @@ Into this:
 </body>
 </html>
 ```
-
-With this:
-
-```elixir
-Slime.render(source, site_title: "Website Title")
-```
-
 
 ## Reference
 
@@ -291,30 +279,10 @@ the library after you have added new engines. You can do this by:
 mix deps.compile slime --force
 ```
 
-## HEEx Support
-
-To output HEEx instead of HTML, see [`phoenix_slime`](https://github.com/slime-lang/phoenix_slime). This will cause slime to emit "html aware" HEEx with two differences from conventional HTML:
-
-- Attribute values will be wrapped in curley-braces (`{}`) instead of escaped EEx (`#{}`):
-
-- HTML Components will be prefixed with a dot. To render an HTML Component, prefix the component name with a colon (`:`).  This will tell slime to render these html tags with a dot-prefix (`.`).
-
-For example,
-
+# Components
+HEEx's components are supported:
 ```slim
-:greet user=@current_user.name
-  | Hello there!
-```
-would create the following output:
-
-```
-<.greet user={@current_user.name}>Hello there!</.greet>
-```
-When using slime with Phoenix, the `phoenix_slime` package will call `precompile/2` and pass the resulting valid HEEx to [`EEx`](https://hexdocs.pm/eex/EEx.html) with [`Phoenix.LiveView.HTMLEngine`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.HTMLEngine.html#handle_text/3) as the `engine:` option.  This will produce the final html.
-
-# HEEx Slot Components
-```slim
-:greet user=@current_user.name
+:greet user=@current_user.name :let=g
   ::subtitle
     | Hello there!
 ```
@@ -322,14 +290,14 @@ When using slime with Phoenix, the `phoenix_slime` package will call `precompile
 would create the following output:
 
 ```
-<.greet user={@current_user.name}>
+<.greet user={@current_user.name} :let={g}>
   <:subtitle>Hello there!</:subtitle>
 </:greet>
 ```
 
-# SHEEx Sigil
+# Sigil
 ```slim
-import PhoenixSlime
+import Slime.Sigil
 
 def button(assigns) do
   ~h"""
@@ -390,7 +358,11 @@ If you have trouble locating exceptions in Slime templates, you can add
 config :slime, :keep_lines, true
 ```
 
-to your `config.exs` file. With this option Slime will keep original template lines in result `eex` and `html`. Keep in mind, that output is slightly different from default Slime output, for example `|` works like `'`, and empty lines are not ignored.
+to your `config.exs` file.
+
+With this option Slime will keep original template lines in result `heex` and `html`.
+
+Keep in mind, that output is slightly different from default Slime output, for example `|` works like `'`, and empty lines are not ignored.
 
 
 ## Contributing
@@ -399,12 +371,5 @@ Feedback, feature requests, and fixes are welcomed and encouraged.  Please
 make appropriate use of [Issues][issues] and [Pull Requests][pulls].  All code
 should have accompanying tests.
 
-[issues]: https://github.com/slime-lang/slime/issues
-[pulls]: https://github.com/slime-lang/slime/pulls
-
-
-## License
-
-MIT license. Please see [LICENSE][license] for details.
-
-[LICENSE]: https://github.com/slime-lang/slime/blob/master/LICENSE
+[issues]: https://github.com/populimited/slime/issues
+[pulls]: https://github.com/populimited/slime/pulls
