@@ -67,4 +67,15 @@ defmodule FunctionComponentTest do
     heex = "<MyApp.module.city name={city_name}><div>test</div></MyApp.module.city>"
     assert precompile(slime) == heex
   end
+
+  test "function components work with forms" do
+    slime = ~S"""
+    :MyApp.module.city name=city_name :let=f
+      div
+        | test
+    """
+
+    heex = "<MyApp.module.city name={city_name} :let={f}><div>test</div></MyApp.module.city>"
+    assert precompile(slime) == heex
+  end
 end
