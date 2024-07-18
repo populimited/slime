@@ -14,6 +14,7 @@ This library is a fork combination from [@tensiondriven/slime][tslime] and [@ten
 [tslime]: https://github.com/tensiondriven/slime
 [t_phoenix_slime]: https://github.com/tensiondriven/phoenix_slime
 
+
 Easily turn this:
 
 ```slim
@@ -51,6 +52,16 @@ Into this:
   </div>
 </body>
 </html>
+```
+
+## Usage
+
+  1. Add `{:slime, git: "populimited/slime", branch: "phx1.7}` to your deps in `mix.exs`.
+  2. Add the following to your Phoenix `config/config.exs`:
+
+```elixir
+  config :phoenix, :template_engines,
+    sheex: Slime.Engine
 ```
 
 ## Reference
