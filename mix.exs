@@ -63,7 +63,7 @@ defmodule Slime.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:phoenix_live_view, "~> 1.0.0"},
       # HTML generation helpers
-      {:phoenix_html, "~> 4.1.1"}
+      {:phoenix_html, "~> 4.2.1"}
     ]
   end
 end
