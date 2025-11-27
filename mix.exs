@@ -61,9 +61,9 @@ defmodule Slime.Mixfile do
       {:neotoma, "~> 1.7.3", manager: :rebar3},
       # Documentation
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:phoenix_live_view, "~> 1.0.0"},
+      {:phoenix_live_view, "~> 1.0"},
       # HTML generation helpers
-      {:phoenix_html, "~> 4.2.1"}
+      {:phoenix_html, "~> 4.2"}
     ]
   end
 end
