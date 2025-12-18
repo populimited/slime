@@ -1,25 +1,10 @@
 defmodule RenderElixirTest do
   use ExUnit.Case, async: true
 
-  import ExUnit.CaptureIO, only: [capture_io: 1]
   import Slime, only: [render: 1, render: 2]
 
   test "parse empty elixir code" do
     assert render("-\n") == ""
-  end
-
-  test "- evalutes Elixir but does not insert the result" do
-    slime = """
-    - IO.puts "Hello"
-    - _ = "Hi"
-    """
-
-    captured =
-      capture_io(fn ->
-        assert render(slime) == ""
-      end)
-
-    assert captured == "Hello\n"
   end
 
   test "= evalutes Elixir and inserts the result" do

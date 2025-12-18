@@ -48,6 +48,10 @@ defmodule Slime.Engine do
     do: Phoenix.LiveView.HTMLEngine.annotate_body(caller)
 
   @impl Phoenix.LiveView.TagEngine
+  def annotate_slot(name, tag_meta, close_tag_meta, caller),
+    do: Phoenix.LiveView.HTMLEngine.annotate_slot(name, tag_meta, close_tag_meta, caller)
+
+  @impl Phoenix.LiveView.TagEngine
   def classify_type(":" <> name), do: {:slot, String.to_atom(name)}
   def classify_type(":inner_block"), do: {:error, "the slot name :inner_block is reserved"}
 
