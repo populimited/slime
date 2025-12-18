@@ -10,14 +10,24 @@ defmodule Slime.Engine do
 
   @impl Phoenix.Template.Engine
   def compile(path, _name) do
+    # We need access to the caller's environment, so we return a call to a macro.
+    quote do
+      require Slime.Engine
+      Slime.Engine.compile(unquote(path))
+    end
+  end
+
+  @doc false
+  defmacro compile(path) do
+    trim = Application.get_env(:phoenix, :trim_on_html_eex_engine, true)
     source = read!(path)
 
     EEx.compile_string(source,
       engine: Phoenix.LiveView.TagEngine,
       line: 1,
       file: path,
-      trim: true,
-      caller: __ENV__,
+      trim: trim,
+      caller: __CALLER__,
       source: source,
       tag_handler: Phoenix.LiveView.HTMLEngine
     )

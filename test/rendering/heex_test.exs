@@ -88,4 +88,10 @@ defmodule FunctionComponentTest do
     heex = "<div id=\"123\" {@rest}>test</div>"
     assert precompile(slime) == heex
   end
+
+  test "function component with @ in attribute value" do
+    slime = ":component[name=\"Name\" user=@user]"
+    heex = "<.component name=\"Name\" user={@user}/>"
+    assert precompile(slime) == heex
+  end
 end
