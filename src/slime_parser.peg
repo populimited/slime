@@ -49,11 +49,13 @@ attributes <- wrapped_attributes / plain_attributes;
 wrapped_attributes <-
   '(' crlf+ indent wrapped_attribute+ (eol / space)+ ')' / '(' wrapped_attribute+ ')' / '[' crlf+ indent wrapped_attribute+ (eol / space)+ ']' / '[' wrapped_attribute+ ']';
 
-wrapped_attribute <- (space / eol)* (attribute:attribute / attribute_name:tag_name);
+wrapped_attribute <- (space / eol)* (attribute:attribute / spread:attribute_spread / attribute_name:tag_name);
 
 plain_attributes <- head:attribute tail:(space attribute)*;
 
 attribute <- attribute_name '=' '='? attribute_value;
+
+attribute_spread <- '@' spread_variable;
 
 attribute_value <- simple:string / dynamic:(string_with_interpolation / attribute_code);
 
@@ -96,6 +98,7 @@ function_component_name <- [a-zA-Z0-9._-]+;
 function_component_slot_name <- [a-zA-Z0-9._-]+;
 shortcut_value <- ([:/]? [a-zA-Z0-9_-])+;
 attribute_name <- [a-zA-Z0-9._@:-]+;
+spread_variable <- [a-zA-Z0-9_]+;
 space <- [ \t]+;
 indent <- '\x{0E}';
 dedent <- '\x{0F}';
