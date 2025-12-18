@@ -69,7 +69,8 @@ defmodule Slime.Parser.Transform do
 
     attributes =
       if Application.get_env(:slime, :sort_attrs, @sort_attrs) do
-        Enum.sort_by(attributes, fn {key, _value} -> key end)
+        {spreads, regular} = Enum.split_with(attributes, fn {key, _} -> key == :attribute_spread end)
+        Enum.sort_by(regular, fn {key, _value} -> key end) ++ spreads
       else
         attributes
       end
@@ -280,6 +281,7 @@ defmodule Slime.Parser.Transform do
     case attribute do
       {:attribute, attr} -> attr
       {:attribute_name, name} -> {name, true}
+      {:spread, ["@", variable]} -> {:attribute_spread, List.to_string(variable)}
     end
   end
 

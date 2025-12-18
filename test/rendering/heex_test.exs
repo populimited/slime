@@ -78,4 +78,14 @@ defmodule FunctionComponentTest do
     heex = "<MyApp.module.city name={city_name} :let={f}><div>test</div></MyApp.module.city>"
     assert precompile(slime) == heex
   end
+
+  test "rest attribute" do
+    slime = ~S"""
+    div[id="123" @rest]
+      | test
+    """
+
+    heex = "<div id=\"123\" {@rest}>test</div>"
+    assert precompile(slime) == heex
+  end
 end

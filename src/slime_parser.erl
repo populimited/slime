@@ -138,7 +138,7 @@ parse(Input) when is_binary(Input) ->
 
 -spec 'wrapped_attribute'(input(), index()) -> parse_result().
 'wrapped_attribute'(Input, Index) ->
-  p(Input, Index, 'wrapped_attribute', fun(I,D) -> (p_seq([p_zero_or_more(p_choose([fun 'space'/2, fun 'eol'/2])), p_choose([p_label('attribute', fun 'attribute'/2), p_label('attribute_name', fun 'tag_name'/2)])]))(I,D) end, fun(Node, Idx) ->transform('wrapped_attribute', Node, Idx) end).
+  p(Input, Index, 'wrapped_attribute', fun(I,D) -> (p_seq([p_zero_or_more(p_choose([fun 'space'/2, fun 'eol'/2])), p_choose([p_label('attribute', fun 'attribute'/2), p_label('spread', fun 'attribute_spread'/2), p_label('attribute_name', fun 'tag_name'/2)])]))(I,D) end, fun(Node, Idx) ->transform('wrapped_attribute', Node, Idx) end).
 
 -spec 'plain_attributes'(input(), index()) -> parse_result().
 'plain_attributes'(Input, Index) ->
@@ -147,6 +147,10 @@ parse(Input) when is_binary(Input) ->
 -spec 'attribute'(input(), index()) -> parse_result().
 'attribute'(Input, Index) ->
   p(Input, Index, 'attribute', fun(I,D) -> (p_seq([fun 'attribute_name'/2, p_string(<<"=">>), p_optional(p_string(<<"=">>)), fun 'attribute_value'/2]))(I,D) end, fun(Node, Idx) ->transform('attribute', Node, Idx) end).
+
+-spec 'attribute_spread'(input(), index()) -> parse_result().
+'attribute_spread'(Input, Index) ->
+  p(Input, Index, 'attribute_spread', fun(I,D) -> (p_seq([p_string(<<"@">>), fun 'spread_variable'/2]))(I,D) end, fun(Node, Idx) ->transform('attribute_spread', Node, Idx) end).
 
 -spec 'attribute_value'(input(), index()) -> parse_result().
 'attribute_value'(Input, Index) ->
@@ -251,6 +255,10 @@ parse(Input) when is_binary(Input) ->
 -spec 'attribute_name'(input(), index()) -> parse_result().
 'attribute_name'(Input, Index) ->
   p(Input, Index, 'attribute_name', fun(I,D) -> (p_one_or_more(p_charclass(<<"[a-zA-Z0-9._@:-]">>)))(I,D) end, fun(Node, Idx) ->transform('attribute_name', Node, Idx) end).
+
+-spec 'spread_variable'(input(), index()) -> parse_result().
+'spread_variable'(Input, Index) ->
+  p(Input, Index, 'spread_variable', fun(I,D) -> (p_one_or_more(p_charclass(<<"[a-zA-Z0-9_]">>)))(I,D) end, fun(Node, Idx) ->transform('spread_variable', Node, Idx) end).
 
 -spec 'space'(input(), index()) -> parse_result().
 'space'(Input, Index) ->

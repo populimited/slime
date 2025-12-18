@@ -93,6 +93,10 @@ defmodule Slime.Compiler do
   defp render_attribute({_, []}), do: ""
   defp render_attribute({_, ""}), do: ""
 
+  defp render_attribute({:attribute_spread, variable}) do
+    " {@#{variable}}"
+  end
+
   defp render_attribute({name, {safe_eex, content}}) do
     case content do
       "true" ->
