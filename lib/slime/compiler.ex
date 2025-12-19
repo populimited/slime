@@ -91,7 +91,6 @@ defmodule Slime.Compiler do
   def hide_dialyzer_spec(input), do: input
 
   defp render_attribute({_, []}), do: ""
-  defp render_attribute({_, ""}), do: ""
 
   defp render_attribute({:attribute_spread, variable}) do
     " {@#{variable}}"

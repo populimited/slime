@@ -94,4 +94,16 @@ defmodule FunctionComponentTest do
     heex = "<.component name=\"Name\" user={@user}/>"
     assert precompile(slime) == heex
   end
+
+  test "component attribute without value" do
+    slime = """
+    select
+      option[value=""]
+        | Test
+    """
+
+    heex = "<select><option value=\"\">Test</option></select>"
+
+    assert precompile(slime) == heex
+  end
 end
