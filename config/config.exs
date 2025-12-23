@@ -8,4 +8,6 @@ if Mix.env() == :test do
   config :slime, :embedded_engines, %{
     test_engine: RenderEmbeddedEngineTest.TestEngine
   }
+else
+  config :slime, :keep_lines, true
 end
