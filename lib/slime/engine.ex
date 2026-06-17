@@ -22,13 +22,11 @@ defmodule Slime.Engine do
     trim = Application.get_env(:phoenix, :trim_on_html_eex_engine, true)
     source = read!(path)
 
-    EEx.compile_string(source,
-      engine: Phoenix.LiveView.TagEngine,
+    Phoenix.LiveView.TagEngine.compile(source,
       line: 1,
       file: path,
       trim: trim,
       caller: __CALLER__,
-      source: source,
       tag_handler: Phoenix.LiveView.HTMLEngine
     )
   end
@@ -40,8 +38,8 @@ defmodule Slime.Engine do
     do: Phoenix.LiveView.HTMLEngine.handle_attributes(ast, meta)
 
   @impl Phoenix.LiveView.TagEngine
-  def annotate_caller(file, line),
-    do: Phoenix.LiveView.HTMLEngine.annotate_caller(file, line)
+  def annotate_caller(file, line, caller),
+    do: Phoenix.LiveView.HTMLEngine.annotate_caller(file, line, caller)
 
   @impl Phoenix.LiveView.TagEngine
   def annotate_body(%Macro.Env{} = caller),

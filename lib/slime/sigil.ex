@@ -17,16 +17,12 @@ defmodule Slime.Sigil do
 
     expr = Slime.Renderer.precompile(expr)
 
-    options = [
-      engine: Phoenix.LiveView.TagEngine,
+    Phoenix.LiveView.TagEngine.compile(expr,
       file: __CALLER__.file,
       line: __CALLER__.line + 1,
       caller: __CALLER__,
       indentation: meta[:indentation] || 0,
-      source: expr,
       tag_handler: Phoenix.LiveView.HTMLEngine
-    ]
-
-    EEx.compile_string(expr, options)
+    )
   end
 end

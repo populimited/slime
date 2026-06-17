@@ -29,18 +29,19 @@ defmodule Slime.Renderer do
   def render(slime, bindings \\ []) do
     heex = precompile(slime)
 
-    options = [
-      engine: Phoenix.LiveView.TagEngine,
-      file: __ENV__.file,
-      line: __ENV__.line + 1,
-      caller: __ENV__,
-      indentation: 0,
-      source: heex,
-      tag_handler: Phoenix.LiveView.HTMLEngine
-    ]
+    ast =
+      Phoenix.LiveView.TagEngine.compile(heex,
+        file: __ENV__.file,
+        line: __ENV__.line + 1,
+        caller: __ENV__,
+        indentation: 0,
+        tag_handler: Phoenix.LiveView.HTMLEngine,
+        trim: false
+      )
 
-    heex
-    |> EEx.eval_string([assigns: bindings], options)
+    {result, _} = Code.eval_quoted(ast, [assigns: bindings], __ENV__)
+
+    result
     |> Phoenix.HTML.html_escape()
     |> Phoenix.HTML.safe_to_string()
   end
