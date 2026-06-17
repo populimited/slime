@@ -4,7 +4,6 @@ defmodule Mix.Tasks.Compile.Peg do
   """
 
   use Mix.Task
-  require EEx
 
   @recursive true
 
